@@ -1,0 +1,507 @@
+
+Magnetic/Palm
+Codejedi 2003
+-------------
+
+FUTURE:
+o title load pictures?
+
+TODO:
+o long entry field.. avoid writing blind? multiline popup?
+o custom wordlists
+o prefs screen?
+o turn on quetzal save format? (break old format!)
+o high res nav icons?
+o handle colour and boldface? (what games use them? I only play early Infocom)
+o run in med, then normal, and letters cut in half
+o return for MORE window (its modal.. hmmm??)
+o "thinking" or snoozing indicator while thinking, saving, etc?
+o General performance (armlets?)
+o command history
+o Blit whole pictures instead of rendering pixel by pixel?
+o picture animation
+o font bucket
+o bg/fg colour
+o game dirs for too many story files; easy? (skip VFSPATH, and use a global
+  var, assigned at mainform?)
+o Wonderland can't seem to save or load.. weird.
+o Level 9
+
+Kronos 1.4.1
+------------
+Mucking around with colour choices.
+
+INT: Resources; added transparency to Go, Clear, and the 4 battery
+  level indicators
+
+NEW: Colour theming basics
+  o You can now pick a colour theme from the Colour pulldown menu; pick
+    from Amiga (white on blue), Atari ST (black on near white), Vic 20 (blue
+    on white) and BlackOnWhite. If you have suggestions for other built in
+    schemes, let me know (like Spectrum, Atari 8bit, etc).
+  o Colours are applied to popup dialogs as well (like the Keyboard and
+    About screens); this has to be done to keep things sensible.
+  o Theme is persistent; if you pick a theme, it'll be automatically used
+    when you fire up another game (any type), be it same Kronos session or
+    another one at a later time
+  o Only available on colour devices
+  o Maybe someday add a colour picker for a custom theme(s)
+
+CHG: Shape of "W" in (W) button and "E" in (E) button. Instead of the two
+  arms curling in at the top of the W, or right of the E, they are now
+  straight; should aid legibility.
+
+NEW: Added some words to various built in poplists
+  o Open to standalone and to tap-relative
+  o Go and Enter to navigation poplist
+
+Kronos 1.4.0
+------------
+
+NEW: Autosave
+  o Its a little funny, but its automatic, and its saveing, and it works :)
+  o When you hit Home to exit, Kronos enters the appropriate commands to
+    save the game for you
+  o When you open a game, and an autosave exists, it offers to load the
+    save for you; if you hit no, you can manually load it at your leisure
+  o If you hit Yes, it'll enter the commands to load the autosave file
+    for you
+  o Understands commands for all 3 game types
+  o When loading from autosave, suppress display until its about to
+    display after the load; also suppress forced MOREs while suppressed :)
+  o When loading from autosave, puts "Loading autosave ..." into the display
+  o When loading from autosave, don't render Magnetic pics until done
+
+NEW: "ZCode Screen" as a Start option (full name: Simulate ZCode Screen)
+  o Only shown for ZCode games
+  o This isn't the most elegent approach, but it should work very well for
+    most games (including such torture tests as Buearacracy)
+  o When enabled, the virtual zmachine screen is dumped to the Palm
+    screen each frame, in whole.
+  o We don't show the "scrolling" -- we update the screen only after all
+    drawing is done; this way we let the zmachine do its own scrolling
+    in effect.
+  o We tell the zmachine the screen is 24 long, even though your screen
+    is shorter; this gives you in essence one whole screen worth of scrollback
+    though you can keep scorlling up and up to get more.. you'll just have
+    to go through multiple impressions of the screen to find it.
+  o We tell the display an approximate width that should work out well for
+    most games (it'll work great on high res devices.. I'll check low res)
+    o Min is 40; infocomgames just bail if <40 is available :/
+    o In normal font or low res, tells zmachine to wrap at 40
+    o In med font, 50
+    o In tiny font, at 65
+    o Seems to work pretty well :)
+
+CHG: Entry field is now wide (OS scrolled) so you can enter longer commands and
+  see what you're entering :)
+FIX: Make sure letters you write get echoed into the games display
+
+Kronos 1.3.2
+------------
+Aesthetic changes for Level 9 potentiality and autosave.
+
+Kronos 1.3.1
+------------
+CHG: Automapper feature check is now memory based instead of OS version.
+  o check heap at AppStart; if 300k, turn on automapping. (So OS4 with large
+    heap can do it too)
+  o if mapper is turned on (300k of RAM at launch), then a "M" shows up in
+    the bottom corner feature listing in About window. (For debugging)
+NEW: Memory low warnings
+  o If runtime memory dips below 5k during a game memory request, it'll
+    warn you "Memory is very low - Kronos may not be able to operate this
+    game on this unit!". If memory is more than 5k and less than 15k, it'll
+    warn you "Memory getting low!". In both cases it'll keep at it, but
+    at least you'll likely know if theres a problem coming :)
+FIX: Workaround; on pre-OS5 devices, page up/down could crash due to a bug
+  in the OS; this version has a workaround so should smooth scroll like the
+  others.
+
+Kronos 1.3.0
+------------
+Goal: Preliminary mapping support
+Goal: Preliminary game notes support
+
+NEW: When text is inserted into the entry field, a space is prepended if
+  needed; a space is always added afterwards, as normal.
+  ex: If you had "look" in the field, and tapped on "Wristband", then
+  it would now have "look Wristband "; previous, it would have
+  "lookWristband " which isn't as useful. However, if you had nothing
+  in the field, then you'd now have "Wristband " -- no prepended space.
+NEW: Mapper module; only activated on OS5 and later devices (just to
+  make sure theres lots of RAM free; I suppose I can check for RAM and
+  activate it if lots of RAM available on a per-game basis.. someone
+  remind me later!)
+  o Checks for OS5 before activating
+  o Only watches movement commands like north, south, etc
+  o Registers rooms and joins between rooms
+  o A join is created one way; go from A to B registers an A->B
+    connection; to make it back, you need to go back that way! (This
+    handles one-way hallways, etc, then). For a good map, you need to
+    go things like.. A->B B->A toggle, then go to the next room. But
+    as you explore, a map will get built up I imagine.
+  o Could add an option to assume two way connection?
+  o Can be confused by rooms that lead to rooms with the same name
+  o Maybe survives spells and teleports, etc; since it maps room to
+    room, by movement commands only, it should not connect when you
+    teleport, etc. We'll see.
+  o When you leave a game (back to the picker), it saves the automap
+  o When you pick and Start a game, the automap is loaded
+NEW: Map window
+  o hit Return on keyboard to dismiss (in addition to OK button of course :)
+  o Center shows room centered on
+  o Click buttons to change "center" to the room picked; thus letting you
+    maneuver around the automap by button taps
+  o Added "Recenter" button which returns you to the room you're standing in
+  o Hides buttons for rooms that are not known; thus the mapper shows
+    your current room plus known surrounding rooms
+  o Handles all 8 basic directions; up/down not yet shown
+  o If current room isn't mapped yet, it'll error and exit right away
+  o Added Find popup; tap it to get a list of all known rooms; pick one
+    to center on it; this lets you go to alternate floors or find rooms
+    you've been to that have no connections to them, and other such
+    oddities
+  o Added Up/Down buttons to bottom; they're only available as appropriate
+    but lets you navigate automap pretty nicely!
+FIX: The "return character" in the wordlists should now be transparent on
+  colour devices; shoudl look a little better when you select the item
+NEW: Note window
+  o available from pulldown menu and standard /A keyboard/graf shortcut
+  o Content will be stored in note.txt file in save diretory; this way
+    you can get at it from your desktop easily, too :)
+  o When you edit, the .txt file is pulle dinto RAM, editted, and
+    then returned to VFS when you close the window
+  o Note content limit is pretty long; approx 32k
+  o Page up/down will scroll the field and scrollbar
+  o Scrollbar will scroll the edit field
+  o Defaults to scrolling to the end of the field, so that you can see
+    most recent notes, and add to it right away
+
+INT: Took off formupdate of Picker (maybe caused double drawing?)
+
+Kronos 1.2.2
+------------
+NEW: Updated to latest version of official Frotz (2.43)
+  o RISK: potential for additional (or less?) resources needed...
+  o Changes to files: fastmem.c (load, save, undo handling),
+    dumb_output, dumb_input, dumb_init, dumb_pic (to handle the
+    input and output, and because they globally allocated too many
+    copies of f_state)
+  o Due to new Frotz, Trinity (and presumably others) now work :)
+  o New Frotz has made response time faster
+
+NEW: Honouring "more prompt" as suggested by zcode games; this should get
+  you MORE pauses without things whipping by at the beginning of a game.
+
+CHG: Removed limit/warning on starting multiple zcode games in one session
+
+CHG: How width is handled; fixed the status bar on many games
+
+INT: Start scrolling at the bottom immediately; intenral change to scroll
+  fudge counter (foo) to make all fonts scroll right right off.
+
+Kronos 1.2.1
+------------
+NEW: Magnetic Scrolls pictures are now shown with an ARMlet if you have an
+  OS5 machine with a compatible processor; otherwise it falls back onto
+  normal Palm 68k code.
+  o Speed of rendering is about 50% faster for candidate machines
+  o Would be much faster still with direct screen draws, but then its
+    a compatability risk for future devices
+
+Kronos 1.2.0
+------------
+NEW: Scrollback to view history
+  o Scroll up and down work in all devices; checked OS5, old Clie
+  o When a key gets pushed, the scroll is reset to show current screen; this
+    means button bar presses, hitting RETURN on keyboard, hitting Checkmark,
+    etc, all reset scroll
+  o Button bar things that dont' hit a key don't reset scroll; picking from
+    wordlist won't reset unless a Return is included, since otherwise it
+    just goes into entry field
+  o Tapping on screen words works during scrollback; thus you can build
+    commands in the entry field while scrolled back!
+  o It won't let you scroll too far :) nice try ;)
+  o Page up/down keys on unit will scroll a few lines at a time
+  o You can tap and hold on scroll arrows to do a smooth scroll up/down
+NEW: A bug in Wonderland would crash on Kronos save/load; worked around it
+  but still some problem save and loading in that game. Weird.
+FIX: .z* games now listed as ZCode games and should start fine (they worked
+  in 1.0.1 but broke in 1.1 due to the Scott Adams addition)
+NEW: Overhauled the file IO subsystem; should be much faster for games to
+  read and write their data and save files. Damn, I'm impressed :)
+  o progress bar will work a little differently
+  o zmachine loads and saves much faster now
+  o scottfree loads and saves fast
+  o magnetic loads and saves fast
+FIX: Prompt line (over top of button bar) is now cleaned up properly
+FIX: On OS5 units, the descending part of the font is not clipped
+CHG: About window; added Scottfree to credits
+NEW: Page up/down on device now scroll game picker listing
+
+Kronos 1.1.0
+------------
+Trying to squeeze Scottfree into this as well :)
+
+NEW: Changed subsystems so frotz saving would be much faster (10s instead of
+  60-90 seocnds in some cases :)
+  o Turned off the "save warning" since its much less necessary now
+  o Added a progress bar so you can see whats going on
+NEW: Button bar icon to show current approx battery status; it has
+  only four levels.. <25%, 25-50%, 50-75%, >75%
+NEW: Game listing is now cached and sorted; nice and fast.
+FIX: A couple error messages still showed "Magnetic/Palm"; fixed.
+NEW: Scottfree added to supported interpreters
+  o picker shows "SF" for Scott Adams style games
+  o games must be .sa to distinguish them from zmachine games (rename from
+    .dat to .sa is easily doneusing Filez or before upload, etc)
+  o Added current room name to status line
+  o Made "quit" return to picker screen
+  o Made it so you can start another game after returning to picker
+  o Low requirements; should run fine on pretty much any unit :)
+  o Hitting Home button should return to game picker as expected
+  o Added Load and Save to interp
+  o Tied Save and Load into Kronos system
+FIX: Start another zmachine  game after quitting one without having to
+  restart Kronos....
+  o Woops, doens't work all the time; something in Frotz. Added a
+    warning so you know to restart until I fix it
+FIX: Some slight glitches on screen shoudl be cleared up
+  o no pixel garbage at bottom, just above button bar, from leftover
+    letter descenders
+  o picture clipping in magnetic scrolls
+CHG: Pushing "L" button now emits "Look" instead of just "L"; This makes
+  Scott Adams happier
+NEW: Added "Game" pulldown menu; it exists mostly to make for easy
+  keyboard shortcuts; most of it is just like hittin screen buttons
+  o Load, Save, Zoom Picture, Quit Game
+  o Thus, you can hit Cmd-Z to Zoom Picture
+NEW: Hitting "Return" on a keyboard in Picture window will dismiss it
+FIX: When prompt takes over button bar, and then returns to button bar,
+  the area is redrawn and the picture thumbnail redrawn, to repair any
+  artifacts
+NEW: Gorgeous new icon.. thanks Wouter! (b/w, gray, colour, high density)
+
+Kronos 1.0.1
+------------
+CHG: Button bar movement buttons now show their command letter on the screen
+  like when you type them
+NEW: When you are saving a game in zmachine, it'll show an alert "this may take
+  awhile"; it looks hung, but is not. Depends on the game, your unit, speed
+  of expansion media, etc.
+CHG: Game picker now shows .dat, .mag, .z* only; other files ignored.
+
+Kronos 1.0.0
+------------
+Bumped to 1.0; let me know if I can release this!
+
+First cut at incorporating a second interpreter; some documentation even,
+too. Frotz 2.32 added. Will need to refresh to Frotz 2.40 later. (2.50?)
+
+NEW: HTML manual included in .zip file
+NEW: Changed name to Kronos (from The Pawn) to reflect the dual nature
+  o Updated About, pulldown menu, launcher name
+NEW: Zmachine support
+  o Tapping on screen should still pull up wordlist
+  o status bar should be halfway usefull
+  o small/large text should work as expected
+  o wordlists and action buttons should work as expected
+  o save and restore implemented
+    o when saving, will add .sav if you don't yourself
+  o the Load button uses "restore" for zmachine, "load" for mag-scroll
+  o Disabled "undo" feature for now; gets us back major memory!
+  o Warning when loading on older units, just so you know. Many or most (?)
+    ZCode games should run on older units, but no idea.. so we'll see :)
+  o Looks like Clie t615c has lots of heap RAM and can actually
+    run ZMachine stuff not too badly. Cool :)
+CHG: Game picker is now not just static buttons; since you can have a variable
+    number of ZMachine games, we need a scrollable listing.
+  o Now displays all files in your Magnetic directory with a MS or ZC beside
+  o Select a game datafile and hit Play to launch it
+  o Magnetic Scrolls is .mag (same base plus .gfx is assumed to be graphics
+    for it); ZCode is anythign at all, other than .sav and .gfx which are
+    hidden.
+    o Using feature memory to hold story isn't hard.. but is complicated
+      since frotz assumes it can write into the story area (variables, etc).
+      So to save memory, would need to have write-handlers added :/
+  o Picker has alternating highlighted background colour for units that
+    can do it; keep the screen from being too boring
+  o tested on a real T615c to make sure still happy
+NEW: Save directories; when you hit "save" or "load", it now only looks in
+  game specific directories; this lets you re-use save names for every game
+  without fear of colliding, and it stops you from loading a save for one game
+  into another (which crashes the interpreter if you try it)
+  o the save directory is gamename.dir; so for The Pawn, which is the game
+    file pawn.mag, the save directory would be "pawn.dir", so you would
+    find its files in /Palm/Programs/Magnetic/pawn.dir/ as *.sav
+CHG: Font handling..
+  o OS5 devices now have the option of tiny, medium, or normal (big)
+  o Old-style Clie devices have the option of tiny or medium (normal can
+    crash the device due to the Sony OS bug)
+  o Standard 160x160 units will only have the normal font option
+  o tested pop up wordlist to make sure still working
+    o OS5 small, med, large all good
+    o Clie highres, small and med good.
+    o 160x160 std: good
+    o Clie T415 gray: tiny and medium worked well
+    o tested on a real T615c to make sure still happy
+NEW: Hitting "checkmark" or Return even when entry field is empty will
+  process as a return to the game
+NEW: "graphics on" is automatically typed for you, in Wonderland
+CHG: Now requires "Kronos" directory instead of Magnetic directory.
+  Sorry about that! Use "Filez" or MSExport or the like to move the files
+  from the old directory to the new one!
+CHG: Maybe slightly faster OS5 picture rendering?
+
+FROTZ: Changed zbyte to zword for h_screen_cols, so that it could handle
+  320 pixels wide; changed width char/string functions to return in pixels
+  instead of in characters, to allow for variable width fonts. Seems to work.
+
+Magnetic 0.9.2
+--------------
+
+FIX: Nailed the older-Clie OS crash bug *Good*. Only cost $249.95CDN plus
+  tax to do it :P (Sony Clie T615C). The issue is that mono bitmaps require
+  a 8bpp member in their family (pointing to the mono bitmap no less!) to
+  avoid the wedge.
+
+GAH: Spent 2 horus wrestlginw tih weird random garbage; Palm stack too
+  small; increased stack size and all is well again.
+
+CHG: When tapping on a word, non-alphanumeric characters are tossed out
+  (ie: we ditch commas, periods, etc)
+
+CHG: Swapped E and W buttons; "W" is now on the left of "E". It just feels
+  wrong to have west on the east side of something. When I read things, though
+  I say "north south east west", but it just "looks" wrong :)
+
+NEW: Three types of popup word lists:
+  o Standalone wordlist, summoned from button bar
+  o Navigational wordlist, summoned from button bar
+  o Word-relative wordlist, summoned by tapping on a word
+  o Some of these words have a return at the end; it is clearly marked in
+    the text with a little return button icon
+  o If it doesn't have a return button, it is inserted into your edit field
+
+Magnetic 0.9.1
+--------------
+
+FIX: Try and work around the infamous Clie OS Bug :/ What it is is you can run
+  an old Clie (pre-OS5, they fixed it in OS5) in true low res mode, or true
+  high res mode (with all high resoperations); if you try and use high res
+  assist mode, it will crash if you mix high and low res operations. If you
+  use all low res ops, or all high res ops, you're okay. We of course want
+  high res images, and the optionof "low res" (smoothed high res assisted)
+  text.. but that crashes the unit due to the OS bug.
+  o Fix.. on old-style Clies, forces you into Tiny Font mode, always. Its
+    better to have tiny fonts + high res images, than just all low res
+    everything :/
+
+Magnetic 0.9.0
+--------------
+
+NEW: Lots of graphics modes for the artwork to try and maximize what each
+  device will see.
+  o Low res grayscale mode supported; unfortunately, most units in this
+    category don't have the RAM (heap) to load the graphics, and so don't
+    see any artwork; but some few units do have enough heap, and so will
+    get low res grayscale artwork (see screenshot)
+  o Low res colour mode still supported; listed for completness
+  o Old Sony Clie highres (OS3.5 and OS5 style); Suported for both grayscale
+    (such as on T415) and colour (T615C, NR series, etc).
+  o Palm OS 5 style highres (Tunsgten line, Sony NX, NZ, etc) and other OS5
+    ARM units; note that Tungsten W is included here, as it has OS5 highres
+    even though its an OS4 unit. Supported in both colour and grayscale.
+  o No direct screen draws are done, for keeping future unit compatability
+  o Order of attempt is colour over grayscale (duh); fist try OS5-style
+    highres, and if not available, then use old style Sony highres, and failing
+    that, use low res.
+NEW: OS5-highres units will now have the option to use teeny fonts
+  o Under the "Start" button is a checkbox to enale/disable tiny fonts for
+    those units that have OS5 highres; I may add tiny font to old-style
+    Sony highres units if the demand is there
+NEW: Turn up some compiler optimizations.. slight speed boost
+NEW: About dialog, bottom right, a list of 'features' detected on device
+NEW: When you save a file (by entering "save" to the game), a ".sav"
+  extension is added if you did not enter an extension; likewise, when loading,
+  if no extension is mentioned, ".sav" is appended. Keeps it organized this way
+NEW: New "load" button bar button (arrow up); tap to see a list of .sav files,
+  and pick one to try and load it; you still get to enter "y" or "n" to confirm
+NEW: "Save" button bar button; it just enters "save" and return for you; you
+  still must enter a filename and confirm; if you have loaded from a file, when
+  you hit Save then the loaded filename will be shoved into the input field to
+  save you typing it. (If you hit save, and have not used load, then the
+  filename 'default.sav' will be used)
+FIX: Scrolling used to have a blank line or two on very first screen; only
+  noticable in tiny-font mode; it muckered up the text-picker; shoudl be
+  fixed now.
+
+
+Magnetic 0.8.1
+--------------
+
+WARN: You need lots of free RAM for this to run; if it has problems when
+  running, do a pinhole reset and try it then :)
+
+NEW: When multiple expansion cards are found, it will use the first one
+  found that has a /Palm/Programs/Magnetic directory on it. This should solve
+  most peoples problems.
+
+Magnetic 0.8.0
+--------------
+o only one VFS is handled; if you've got multiple, I need to build
+  something to pick the card to use :)
+
+WARN: You need lots of free RAM for this to run; if it has problems when
+  running, do a pinhole reset and try it then :)
+
+NEW: Added version to bottom corner of About dialog so you can see what the
+  real version number is (since I leave resource version for launcher set to
+  last major revision number, usually)
+CHG: MORE-pager will now not go off if theres no more text in the pipe
+CHG: MORE-pager comes up after 11 straight lines of text
+NEW: Forgot to eliminate stale lines of text; now only keeps the last 200
+  lines of text. Once a scrollbar or the like gets added so we can see
+  history, I'll increase this or make it configurable
+NEW: Palm OS event loop only runs if no keys in virtual input buffer; this
+  lets the game engine inhale at fastest rate
+CHG: Slight internal change about how VFS is counted
+
+CHK: Does this run on Sony Clie T615c, OS4.1 (Laing); can't get past VFS error
+  o runs in emulator okay; emulator sees two cards though, which is weird
+
+Alpha 1 (0.7.0)
+-------
+NEW: Tap on screen text to insert the word under the pen into the entry field
+  o now puts a space after the word inserted
+NEW: Added Edit pulldown menu with the usual Palm OS text edit commands;
+  cut, copy, select all, paste, keyboard, grafitti, etc.
+  o Pulldown menu is available by tappign in status-line at top of screen
+    on the left side of the screen (approx where a window tab might
+    normally be)
+NEW: Current artwork is shown in thumbnail in the bottom right; tap on it to
+  get larger version of it
+  o Popup window to show zoomed artwork
+NEW: Made start of icon bar; n, s, e, w, i
+FIX: Exit withotu crashing :)
+NEW: Load and save are now implemetned and working
+CHG: Added "L" to button bar
+CHG: Status bar now draw left and right justified (split in middle to fit
+  Palm OS screen)
+NEW: Added a basic game picker screen
+NEW: Very basic game picker
+  o Shows a button for each MS game
+  o When you hit button, it sets up a few things and waits
+  o Press "Start" to try and play it; any errors will be reported
+NEW: Some basic error checking
+  o Check for presence of VFS Manager; we bail out if not present, since
+    we need it!
+  o Checks for required OS version 4
+  o Make sure we're able to create or open our Magnetic directory
+CHG: Took out grafitti shift indicator; not really needed
+NEW: Added "Clear" ('X') button to wipe entry field
+NEW: Added "Go" ('V' checkmark) to submit .. though I would use grafitti
+  "return" instead (swipe from top right to bottom left)
+NEW: Simple "MORE" facility added; it blocks all activity until you hit it :)
+NEW: Added "Quit" pulldown menu item so you can bail withotu hitting "Home"

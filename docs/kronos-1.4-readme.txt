@@ -1,0 +1,105 @@
+
+KRONOS
+------
+Jeff Mitchell, Codejedi, 2003.
+
+SEE kronos.h FOR INTRODUCTION, LICENSING, ETC.
+
+The following can be out of date, but may also be of use.
+
+History
+-------
+Magnetic is an interpreter/emulator for the Magnetic Scrolls games. It was
+initially released around 1996 if memory serves. Several ports popped up
+quickly.. a DOS port, a Windows port, and.. am X11 port by me. (This predated
+things like KDE and Gnome :) Later, Magnetic 2 came along, and ports to
+other platforms came too. The Unix/X11 port was made redunsant by KDE and
+Gnome versions.
+
+Time passes.
+
+Being 2003 and I've been a PDA hacker for years, so I've gotten finally back
+to Magnetic, and heres your Palm OS port.
+
+Abstract
+--------
+This project depends upon Magnetic and Frotz; Magnetic 2.2 was the latest
+version available at the time; if a new version comes out, it would be
+easily integrated with a couple line changes. Frotz 2.32 was used for the
+ZMachine (Infocom) interpreter, though it is out of date; minor changed
+were made, so I hope to go to 2.40 or 2.50 or whatever is current soon.
+
+Forgive the hackish nature of the code; Codejedi's codebase is private through
+necessity, so this code was hacked together quickly due to time constraints,
+and I really wanted to play The Pawn ;) No Codejedi code is used in this
+project, though of course it would not have been possible hadn't I learnt
+everything through developing CJ's software. It is hoped others can learn
+some of the many tricks in Palm OS I'll use here :)
+
+Codejedi has funded this work; test devices had to be bought for a couple
+of issues, and much Codejedi time was spend on this work. All of this work
+is to be considered GPL and donated to the community in hopes that people
+enjoy the classics :)
+
+Porting Updated Frotz/Magnetic to Palm
+--------------------------------------
+Minor changes are needed for each file; ie: Comment out the various Standard
+C includes, and replace them with the half dozen includes for this project.
+The project file (if you're using CodeWarrior) turns off strict pointers
+and doesn't require funciton prototypes, so the port to Palm is very easy.
+It is vey easy as the adapter.c code essentially wraps the Standard C
+library, which does not exist for Palm OS. This minimizes the code changes
+needed for the port.
+
+Project Layout 
+--------------
+There are 3 segments to the application:
+
+Core - adapter, display, mainform, starter
+Magnetic - emu.c, defs.h
+Frotz - a pile of stuff
+
+The Core is all the standard C wrappers, display code, etc. The subdirectories
+contain the interpreters, ever so slightly modified as mentioned above (changed
+#includes, touched a couple lines here or there).
+
+Core
+----
+adapter.[ch]
+  o Responsible for getting the interp's to talk to Palm OS; it includes
+    macros and functions to implement malloc, stdio, and other such handy
+    things.
+  o Has a custom event loop, since I'm a silly boy
+
+display.[ch]
+  o Responsible for getting the text streamed to the UI, as well as handling
+    tapping on the screen, etc.
+  o Handles the highres and such mostly
+
+MainForm.[ch]
+  o the main display form; handles the menus, button presses, etc, and passes
+    them off to display.c and adapter.c as needed
+
+Starter.c
+  o Standard CodeWarrior kickoff file. Handles app startup, shutdown,
+    preference loading, event loop, etc. Of main interest is AppStart() and
+    AppStop(); in there we pick up the PDA features, and turn on things, so
+    that the rest of the code (display.c, for example) can remain mostly
+    ignorant about individual device detalis. (So while Starter worries about
+    Sony Clie OS4 this or that, display.c only concerns itself with "sony
+    high res" or "os5 highres" and not model numbers or junk like that)
+
+What goes on?
+-------------
+o) Run the application -- OS fire sup Starter
+o) Starter - AppStart() figures out your device abilities
+o) Starter - kicks up PickerForm
+o) Starter - AppEventLoop() handles PickerForm events
+o) Picker.c - handles buttonsetc
+o) Picker - EventHandler - ctlSelectEvent handles game choice; if you hit
+   a Magnetic Scrolls game, it sets the gamename and graphicsname, and fires
+   up MainForm
+o) MainForm - Handles an interpreter; right now its Magnetic Scrolls only.
+   Could be Frotz later, and perhaps even others.
+o) If you bail out of a game, MainForm returns to Picker, and then out
+   to the OS

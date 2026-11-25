@@ -1,0 +1,5 @@
+/* Kronos: database name, creator ID, launch stack and the extra code
+ * sections described in src/sections.h. The stack was 6K in the original
+ * CodeWarrior build; Level 9's restore needs a ~5K game state on it. */
+application { "Kronos" Magn stack=0x3000 }
+multiple code { "kronos" "magnetic" "scott" "frotzio" "level9" "level9b" }

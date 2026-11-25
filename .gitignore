@@ -1,55 +1,13 @@
-# Prerequisites
-*.d
+# Build intermediates (build/Kronos.prc itself is kept)
+obj/
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+# PilRC is built locally by tools/build-pilrc.sh
+tools/pilrc/
 
-# Linker output
-*.ilk
-*.map
-*.exp
+# Test story files (commercial games; not redistributable)
+games/
+level9/
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
-
-# debug information files
-*.dwo
+# macOS
+.DS_Store
+._*
